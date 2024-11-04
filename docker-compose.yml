@@ -1,11 +1,16 @@
+version: "3.8" # Specify the Compose file version
+
 services:
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_PID=Developer
+      - SA_PASSWORD=YourPassword123 # Set a strong password for the SA user
     ports:
       - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql # Persist database data
 
   api:
     build:
@@ -17,3 +22,7 @@ services:
       - db
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=CustomerDB;User Id=sa;Password=YourPassword123; # Connect to SQL Server
+
+volumes:
+  sql_data: # Define the named volume for SQL Server

@@ -6,9 +6,12 @@ EXPOSE 80
 # Use the .NET SDK image to build the application
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
+
+# Copy the csproj file and restore dependencies
 COPY ["MyStore.Api/MyStore.Api.csproj", "MyStore.Api/"]
 RUN dotnet restore "MyStore.Api/MyStore.Api.csproj"
 
+# Copy the rest of the application files and build
 COPY . .
 WORKDIR "/src/MyStore.Api"
 RUN dotnet build "MyStore.Api.csproj" -c Release -o /app/build
